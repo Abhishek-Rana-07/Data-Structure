@@ -1,15 +1,25 @@
 //Program to implement infix to postfix(incomplete program)
 #include<stdio.h>
+#define MAX 100
  char stack[100];
  int top=-1;
  void PUSH(char x)
  {
-    stack[++top]=x;
-    
+    if(top==MAX-1)
+        printf("Stack full!!! cannot insert more\n");
+    else
+        stack[++top]=x;
  }
  void pop(char x)
  {
-     top--;
+    if(top==-1)
+       printf("Stack is empty\n");
+    else
+    {
+        if(stack[top]!='(')
+            printf(" %c ",stack[top]);
+        top--;
+    }
  }
 int main()
 {
@@ -24,7 +34,7 @@ int main()
     while(IP_string[i] !='\0')
     {
         if(IP_string[i]=='+' || IP_string[i]=='-'){
-            if(top==-1)
+            if(top==-1 || stack[top]=='(')
                 PUSH(IP_string[i]);
             else if(stack[top] =='*' ||stack[top]== '/' ||stack[top]=='^')
             {
@@ -39,7 +49,7 @@ int main()
         }
         else if(IP_string[i]=='*' || IP_string[i]=='/')
         {
-            if(top==-1)
+            if(top==-1 || stack[top]=='(')
                 PUSH(IP_string[i]);
             else if(stack[top]=='+' || stack[top]=='-'){
                 PUSH(IP_string[i]);
@@ -49,20 +59,24 @@ int main()
                 i--;
             }
         }
-        else if(stack[top]=='^')
+        else if(IP_string[i]=='^')
+            PUSH(IP_string[i]);
+        else if(IP_string[i]=='(')
+            PUSH(IP_string[i]);
+        else if(IP_string[i]==')')
         {
-            if(top==-1)
-                PUSH(IP_string[i]);
-             else if(stack[top]=='+' || stack[top]=='-'|| stack[top]=='*' || stack[top]=='/'||stack[top]=='^')
-                PUSH(IP_string[i]);
+            while(top!=-1 && stack[top]!='(')
+                pop(stack[top]);
+            if(top==-1 || stack[top]!='(')
+                printf("\nError ( missing\n");
+            else
+                pop(stack[top]);
         }
         else
-            printf("%c",IP_string[i]);
-            
-        while(top!=-1)
-            pop(stack[top]);
-            
+            printf(" %c ",IP_string[i]);
         i++;
-        
     }
+    while(top!=-1)
+        pop(stack[top]);
+    printf("\n");
 }
