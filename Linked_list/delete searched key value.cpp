@@ -1,0 +1,84 @@
+//Deletion of searched key value using single linked list
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct node{
+    int data;
+    struct node *next;
+}nodetype;
+void display(nodetype * head)
+{
+    while(head!=NULL)
+    {
+        printf("Element is: %d\n",head->data);
+        head=head->next;
+    }
+}
+nodetype* delete(nodetype* head,nodetype* ptr)
+{
+    nodetype* temp=head;
+    while(temp->next!=ptr)
+    {
+        temp=temp->next;
+    }
+    temp->next=ptr->next;
+    free(ptr);
+    return head;
+}
+nodetype* delete_at_first(nodetype * head){
+    nodetype* temp=head;
+    head=temp->next;
+    free(temp);
+    return head;
+}
+nodetype* search(nodetype* head,int k){
+    nodetype *temp=head->next;
+    while(temp!=NULL)
+    {
+        if(k==head->data)
+        {
+            head=delete_at_first(head);
+            return head;
+        }
+        else if(k==temp->data)
+        {
+           head= delete(head,temp);
+           return head;
+        }
+        else{
+            temp=temp->next;
+        }    
+    }
+    if(temp==NULL)
+    {
+        printf("Element not found\n");
+    }
+    
+}
+int main()
+{
+    int key;
+    nodetype *head=(nodetype *)malloc(sizeof(nodetype));
+    nodetype *second=(nodetype *)malloc(sizeof(nodetype));
+    nodetype *third=(nodetype *)malloc(sizeof(nodetype));
+    nodetype *fourth=(nodetype *)malloc(sizeof(nodetype));
+    
+    head->data=10;
+    head->next=second;
+    
+    second->data=20;
+    second->next=third;
+    
+    third->data=30;
+    third->next=fourth;
+    
+    fourth->data=40;
+    fourth->next=NULL;
+    
+    display(head);
+    printf("Enter the number to be searched in linked list:\n");
+    scanf("%d",&key);
+    head=search(head,key);
+    display(head);
+    return 0;
+    
+}
